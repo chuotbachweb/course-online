@@ -19,6 +19,8 @@ router.put(
 );
 
 router.get("/get-all-course", courseController.getCourse);
+router.get("/get-course-free", courseController.getCourseFree);
+router.get("/get-course-price", courseController.getCoursePrice);
 router.get("/course-all-sold",verifyTokenTeacher, courseController.getAllCourseSold);
 router.get("/course-sold/:id",verifyTokenTeacher, courseController.getCourseSold);
 router.get("/get-course-teacher", courseController.getCourseTeacher);

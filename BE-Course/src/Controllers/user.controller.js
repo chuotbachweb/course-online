@@ -3,6 +3,10 @@ const jwt = require("jsonwebtoken");
 
 const UserModel = require("../models/user.model");
 const uploadFirebase = require("../middleware/uploadFirebase");
+const {
+  deleteManyComment,
+  getCourseOwnerStudent,
+} = require("../Constants/Constants");
 
 module.exports = {
   currentUser(req, res, next) {
@@ -68,7 +72,7 @@ module.exports = {
               id: data._id,
               role: data.role,
             },
-            process.env.ACCESS_TOKEN,
+            process.env.ACCESS_TOKEN
           );
 
           const { ...other } = data._doc;
@@ -97,7 +101,7 @@ module.exports = {
         res.status(500).json({ error: error });
       });
   },
-  
+
   async editUser(req, res, next) {
     if (req.file) {
       const imageUrl = await uploadFirebase({
@@ -129,7 +133,6 @@ module.exports = {
       });
   },
 
-  
   async newTeacher(req, res, next) {
     if (req.file) {
       const imageUrl = await uploadFirebase({
@@ -222,14 +225,23 @@ module.exports = {
         res.status(500).json({ error: error });
       });
   },
-  
-  deleteUser(req, res, next) {
-    UserModel.findByIdAndDelete(req.params.id)
-      .then((data) => {
-        res.status(200).json({ data });
-      })
-      .catch((error) => {
-        res.status(500).json({ error: error });
-      });
+
+  async deleteUser(req, res, next) {
+    const checkCourseOwner = await getCourseOwnerStudent({
+      studentId: req.params.id,
+    });
+
+    if (checkCourseOwner.length < 0) {
+      res.status(500).json({ error: "Không thể xóa người dùng này!" });
+    } else {
+      await deleteManyComment({ studentId: req.params.id });
+      UserModel.findByIdAndDelete(req.params.id)
+        .then((data) => {
+          res.status(200).json({ data });
+        })
+        .catch((error) => {
+          res.status(500).json({ error: error });
+        });
+    }
   },
 };

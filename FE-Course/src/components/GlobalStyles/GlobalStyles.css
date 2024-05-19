@@ -14,6 +14,20 @@ body {
   overflow-x: auto;
 }
 
+
+h1{
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+h2{
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+h3{
+  font-size: 1rem;
+  font-weight: 700;
+}
 ::-webkit-scrollbar {
   height: 5px;
   width: 5px;

@@ -7,7 +7,7 @@ import { AuthContext } from "~/shared/AuthProvider";
 function ManagerLayout({ children }) {
   const { role } = useContext(AuthContext);
 
-  if (role > 1) {
+  if (role === 2) {
     return null;
   }
 

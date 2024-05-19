@@ -27,7 +27,7 @@ export const getMyCourse = async ({ page, perPage }) => {
   }
 };
 
-export const trackingProgress = async ({lessonId,courseId}) => {
+export const trackingProgress = async ({ lessonId, courseId }) => {
   try {
     const token = localStorage.token;
     const res = await httpRequest.put(
@@ -43,5 +43,17 @@ export const trackingProgress = async ({lessonId,courseId}) => {
     return res.data;
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const deleteMyCourse = async ({ id }) => {
+  try {
+    const res = await httpRequest.delete(`my-course/delete/${id}`, {
+      headers: { authorization: "Bearer " + localStorage.token },
+    });
+
+    return res;
+  } catch (error) {
+    return error;
   }
 };

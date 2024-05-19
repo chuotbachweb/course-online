@@ -1,19 +1,22 @@
+const RateCourseModel = require("../models/rateCourse.model");
+const MyCourseModel = require("../models/myCourse.model");
+
 module.exports = {
-  async deleteModel(model, courseId) {
+  async deleteManyComment(objId) {
     try {
-      const res = await model.findOneAndDelete({
-        _id: courseId,
-      });
-      return res;
+      const deleteComment = await RateCourseModel.deleteMany(objId);
+
+      return deleteComment;
     } catch (error) {
       return error;
     }
   },
 
-  async getById(model,id){
+  async getCourseOwnerStudent(objId) {
     try {
-      const res = await model.findById(id);
-      return res;
+      const getCourse = await MyCourseModel.find(objId);
+
+      return getCourse;
     } catch (error) {
       return error;
     }

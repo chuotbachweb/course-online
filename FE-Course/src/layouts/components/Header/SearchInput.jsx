@@ -14,7 +14,7 @@ function SearchInput() {
     };
 
   return (
-    <form onSubmit={onSearch} className="w-full mx-4 sm:mx-0 sm:w-1/2 flex items-center border border-gray-300 rounded-xl overflow-hidden">
+    <form onSubmit={onSearch} className="w-11/12 mx-4 sm:mx-0 sm:w-1/2 flex items-center border border-gray-300 rounded-xl overflow-hidden">
       <input
         placeholder="Nhập tên khóa học..."
         value={nameCourse}

@@ -3,45 +3,48 @@ import ReactPaginate from "react-paginate";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
 import Modal from "~/components/Modal";
-import * as courseService from "~/services/courseService"
+import * as courseService from "~/services/courseService";
 import { AuthContext } from "~/shared/AuthProvider";
-import TableCourseSold from "~/pages/Manager/Constant/TableCourseSold"
+import TableCourseSold from "~/pages/Manager/Constant/TableCourseSold";
 
 function CourseSoldAdmin() {
-    const {currentUser} = useContext(AuthContext)
-    const [currentPage, setCurrentPage] = useState(1);
-    const [data, setData] = useState([]);
-    const [nameCourse, setNameCourse] = useState(null);
-    const [totalPage, setTotalPage] = useState(0);
+  const { role } = useContext(AuthContext);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [data, setData] = useState([]);
+  const [nameCourse, setNameCourse] = useState(null);
+  const [totalPage, setTotalPage] = useState(0);
 
-    const handlePageChange = (selectedPage) => {
-      setCurrentPage(selectedPage.selected + 1);
-    };
-  
-    const onChange = (e) => {
-      setNameCourse(e.target.value);
-    };
-  
-    const fetch = useCallback(() => {
-        courseService
-         .getAllCourseSold({
-            page: currentPage,
-            perPage: 5,
-            nameCourse: nameCourse,
-          })
-         .then((res) => {
-            setData(res.data.data);
-            setTotalPage(res.data.totalPages);
-          })
-         .catch((err) => {
-            console.log(err);
-          });
-    }, [currentPage, nameCourse]);
+  const handlePageChange = (selectedPage) => {
+    setCurrentPage(selectedPage.selected + 1);
+  };
 
-  
-    useEffect(() => {
-      fetch();
-    }, [fetch]);
+  const onChange = (e) => {
+    setNameCourse(e.target.value);
+  };
+
+  const fetch = useCallback(() => {
+    courseService
+      .getAllCourseSold({
+        page: currentPage,
+        perPage: 5,
+        nameCourse: nameCourse,
+      })
+      .then((res) => {
+        setData(res.data.data);
+        setTotalPage(res.data.totalPages);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [currentPage, nameCourse]);
+
+  useEffect(() => {
+    fetch();
+  }, [fetch]);
+
+  if (role === 1) {
+    return null;
+  }
 
   return (
     <div className="w-full px-10">
@@ -57,7 +60,7 @@ function CourseSoldAdmin() {
         </div>
       </div>
 
-      <TableCourseSold data={data} />
+      <TableCourseSold data={data} fetch={fetch} />
 
       <ReactPaginate
         pageCount={totalPage}

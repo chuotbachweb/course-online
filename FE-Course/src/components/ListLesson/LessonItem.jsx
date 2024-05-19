@@ -37,8 +37,8 @@ function LessonItem({ data, arrayData, index, openModal, received }) {
         }
       });
     }
-  }, [myCourse,token]);
-
+  }, [myCourse, token]);
+  
   if (role === 1) {
     linkNavigate = () =>
       navigate(routes.detailLesson.replace(":id", data._id), {
@@ -54,13 +54,12 @@ function LessonItem({ data, arrayData, index, openModal, received }) {
   }
 
   return (
-    <button
-      onClick={linkNavigate}
-      className="flex w-full text-left border my-4 rounded-md overflow-hidden"
-    >
+    <div className="flex w-full text-left border my-4 rounded-md overflow-hidden">
       <div className="w-full flex items-center justify-between p-4">
-        <div>{`${index + 1}. ${data.nameLesson}`}</div>
-        {openModal ? (
+        <button onClick={linkNavigate}>{`${index + 1}. ${
+          data.nameLesson
+        }`}</button>
+        {openModal && role !== 2 ? (
           <div className="flex items-center">
             <button
               className="text-blue-500 px-4"
@@ -83,7 +82,7 @@ function LessonItem({ data, arrayData, index, openModal, received }) {
           <p>{successProgress && <FaCheckCircle className="text-primary" />}</p>
         )}
       </div>
-    </button>
+    </div>
   );
 }
 

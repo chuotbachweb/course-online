@@ -55,7 +55,7 @@ function CourseTeacher() {
 
   const openDetail = (description) => {
     setShowModal(true);
-    setBody(description)  
+    setBody(<div dangerouslySetInnerHTML={{ __html: description }} />)  
   };
 
   const onDelete = () => {

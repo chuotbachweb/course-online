@@ -67,7 +67,7 @@ function HomeManager() {
       <Bars title={"Doanh thu"} labels={labelsMonths} dataBar={dataBar} />
 
       <Bars
-        title={"Top 10 khóa học"}
+        title={"Doanh thu khóa học"}
         labels={labelsTopCourse}
         dataBar={dataBarCourse}
         titleHover={titleHover}

@@ -10,7 +10,13 @@ function HeaderManager() {
   const { role, logOut } = useContext(AuthContext);
 
   const newSubmit = () => {
-    navigate(role === 0 ? routes.newTeacher : routes.newCourse);
+    navigate(
+      role !== 1
+        ? role === 3
+          ? routes.newRecruitment
+          : routes.newTeacher
+        : routes.newCourse
+    );
   };
 
   return (
@@ -20,7 +26,11 @@ function HeaderManager() {
           className="bg-primary text-white px-4 py-2 mr-2 rounded-lg"
           onClick={newSubmit}
         >
-          {role === 0 ? "Thêm giảng viên" : "Thêm khóa học"}
+          {role !== 1
+            ? role === 3
+              ? "Đăng bài tuyển dụng"
+              : "Thêm giảng viên"
+            : "Thêm khóa học"}
         </button>
         <CiLogout size={30} className="cursor-pointer" onClick={logOut} />
       </div>

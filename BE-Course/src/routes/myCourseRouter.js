@@ -8,5 +8,6 @@ router.get("/buy-course/:id", verifyToken, myCourseController.buyCourse);
 router.get("/get-my-course", verifyToken, myCourseController.getMyCourse);
 
 router.put("/tracking-progress",verifyToken, myCourseController.trackProgress);
+router.delete("/delete/:id",verifyToken, myCourseController.deleteMyCourse);
 
 module.exports = router;

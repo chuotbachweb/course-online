@@ -20,7 +20,7 @@ const verifyTokenAdmin = (req, res, next) => {
     const token = authHeader.split(" ")[1];
     jwt.verify(token, process.env.ACCESS_TOKEN, (err, user) => {
       if (err) res.status(403).json({ error: "Token is invalid" });
-      else if (user.role !== 0) {
+      else if (user.role === 2) {
         res.status(403).json({ error: "You are not authorized" });
       } else {
         req.user = user;
@@ -50,4 +50,27 @@ const verifyTokenTeacher = (req, res, next) => {
   }
 };
 
-module.exports = { verifyToken, verifyTokenAdmin, verifyTokenTeacher };
+const verifyTokenBusiness = (req, res, next) => {
+  const authHeader = req.headers["authorization"];
+  if (authHeader) {
+    const token = authHeader.split(" ")[1];
+    jwt.verify(token, process.env.ACCESS_TOKEN, (err, user) => {
+      if (err) res.status(403).json({ error: "Token is invalid" });
+      else if (user.role !== 0 && user.role !== 3) {
+        res.status(403).json({ error: "You are not authorized" });
+      } else {
+        req.user = user;
+        next();
+      }
+    });
+  } else {
+    res.sendStatus(401);
+  }
+};
+
+module.exports = {
+  verifyToken,
+  verifyTokenAdmin,
+  verifyTokenTeacher,
+  verifyTokenBusiness,
+};

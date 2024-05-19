@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+import ReactQuill from "react-quill";
 import { useNavigate, useParams } from "react-router-dom";
+import "react-quill/dist/quill.snow.css";
 
 import * as courseService from "~/services/courseService";
 
@@ -8,11 +10,11 @@ function EditCourse() {
   const navigate = useNavigate();
   const [data, setData] = useState({
     nameCourse: "",
-    description: "",
     imageUrl: "",
-    price: 0
+    price: 0,
   });
   const [image, setImage] = useState("");
+  const [description, setDescription] = useState("");
 
   const onChange = (e) => {
     const newData = { ...data };
@@ -35,7 +37,7 @@ function EditCourse() {
     e.preventDefault();
     const formData = new FormData();
     formData.append("nameCourse", data.nameCourse);
-    formData.append("description", data.description);
+    formData.append("description", description);
     formData.append("imageUrl", data.imageUrl);
     formData.append("price", data.price);
 
@@ -56,10 +58,11 @@ function EditCourse() {
       .then((course) => {
         setData({
           nameCourse: course.data.nameCourse,
-          description: course.data.description,
           imageUrl: course.data.imageUrl,
-          price: course.data.price
+          price: course.data.price,
         });
+        console.log(course.data.description);
+        setDescription(course.data.description);
 
         if (course.data.imageUrl) {
           setImage(course.data.imageUrl);
@@ -67,6 +70,26 @@ function EditCourse() {
       })
       .catch((error) => console.log(error));
   }, []);
+
+  const modules = {
+    toolbar: [
+      [{ header: [1, 2, 3, 4, false] }],
+      ["bold", "italic", "underline"],
+      [
+        { list: "ordered" },
+        { list: "bullet" },
+        { indent: "-1" },
+        { indent: "+1" },
+      ],
+      [
+        { align: "" },
+        { align: "center" },
+        { align: "right" },
+        { align: "justify" },
+      ],
+      ["size", "link"],
+    ],
+  };
 
   return (
     <form onSubmit={onSubmit} className="w-3/4 mx-auto mt-10">
@@ -89,25 +112,14 @@ function EditCourse() {
         </label>
       </div>
 
-      <div className="relative z-0 w-full mb-5 group">
-        <textarea
-          name="description"
-          id="description"
-          className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-          placeholder=" "
-          required
-          onChange={onChange}
-          value={data.description}
-        />
-        <label
-          htmlFor="description"
-          className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-        >
-          Mô tả
-        </label>
-      </div>
+      <ReactQuill
+        theme="snow"
+        value={description}
+        onChange={(e) => setDescription(e)}
+        modules={modules}
+      />
 
-      <div className="relative z-0 w-full mb-5 group">
+      <div className="relative z-0 w-full mt-5 mb-5 group">
         <input
           type="number"
           name="price"

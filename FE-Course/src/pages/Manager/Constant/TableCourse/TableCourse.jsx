@@ -29,8 +29,8 @@ function TableCourse({ data, onOpen, openDetail }) {
             <th scope="col" className="px-6 py-3">
               Ngày tạo
             </th>
-            <th></th>
-            <th></th>
+            {role !== 3 && <th></th>}
+            {role !== 3 && <th></th>}
           </tr>
         </thead>
         <tbody>
@@ -58,9 +58,7 @@ function TableCourse({ data, onOpen, openDetail }) {
                   </Link>
                 </td>
                 {role === 0 && (
-                  <td className="px-6 py-4">
-                    {item.teacherId.fullName}
-                  </td>
+                  <td className="px-6 py-4">{item.teacherId.fullName}</td>
                 )}
                 <td className="px-6 py-4 text-nowrap text-primary">
                   {item?.price?.toLocaleString("vi-VN") || 0} VNĐ
@@ -68,27 +66,27 @@ function TableCourse({ data, onOpen, openDetail }) {
                 <td className="px-6 py-4">
                   {new Date(item.createdAt).toLocaleDateString("vi-VN")}
                 </td>
-                <td className="px-6 py-4 text-right">
+                {role !== 3 && <td className="px-6 py-4 text-right">
                   <Link
                     to={`/manager/edit-course/${item._id}`}
                     className="font-medium p-2 text-blue-600 dark:text-blue-500 hover:underline"
                   >
                     Sửa
                   </Link>
-                </td>
-                <td>
+                </td>}
+                {role !== 3 && <td>
                   <button
                     onClick={() => onOpen(item._id)}
                     className="font-medium p-2 text-red-600 dark:text-red-500 hover:underline"
                   >
                     Xóa
                   </button>
-                </td>
+                </td>}
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan={5} className="text-center py-4">
+              <td colSpan={6} className="text-center py-4">
                 There is no data
               </td>
             </tr>

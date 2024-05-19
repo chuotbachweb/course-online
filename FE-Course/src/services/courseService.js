@@ -12,6 +12,28 @@ export const getAllCourse = ({ page, perPage, nameCourse }) => {
   }
 };
 
+export const getCourseFree = async ({ page, perPage }) => {
+  try {
+    const res = httpRequest.get("course/get-course-free", {
+      params: { page, per_page: perPage },
+    });
+    return res;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const getCoursePrice = async ({ page, perPage }) => {
+  try {
+    const res = httpRequest.get("course/get-course-price", {
+      params: { page, per_page: perPage },
+    });
+    return res;
+  } catch (error) {
+    return error;
+  }
+};
+
 export const getCourseTeacher = async ({
   page,
   perPage,

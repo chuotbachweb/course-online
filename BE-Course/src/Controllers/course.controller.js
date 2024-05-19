@@ -111,6 +111,63 @@ module.exports = {
       });
   },
 
+  getCourseFree(req, res, next) {
+    const { page, per_page } = req.query;
+    const objWhere = { price: 0 };
+
+    CourseModel.find(objWhere)
+      .sort({ _id: -1 })
+      .populate("teacherId")
+      .then((data) => {
+        const currentPage = parseInt(page) || 1;
+        const itemsPerPage = parseInt(per_page) || data.length;
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const totalItems = data.length;
+        const totalPages = Math.ceil(totalItems / itemsPerPage) || data.length;
+
+        const items = data.slice(startIndex, endIndex);
+
+        res.json({
+          data: items,
+          currentPage,
+          totalPages,
+        });
+      })
+      .catch((error) => {
+        res.status(500).json({ error: error });
+      });
+  },
+  getCoursePrice(req, res, next) {
+    const { page, per_page } = req.query;
+    const objWhere = {};
+
+    objWhere.price = { $gt: 0 };
+
+    CourseModel.find(objWhere)
+      .sort({ _id: -1 })
+      .populate("teacherId")
+      .then((data) => {
+        const currentPage = parseInt(page) || 1;
+        const itemsPerPage = parseInt(per_page) || data.length;
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const totalItems = data.length;
+        const totalPages = Math.ceil(totalItems / itemsPerPage) || data.length;
+
+        const items = data.slice(startIndex, endIndex);
+
+        res.json({
+          data: items,
+          currentPage,
+          totalPages,
+        });
+      })
+      .catch((error) => {
+        res.status(500).json({ error: error });
+      });
+  },
+
   getCourseSold(req, res, next) {
     const { page, per_page, nameCourse } = req.query;
     const objWhere = { teacherId: req.params.id };
@@ -191,15 +248,11 @@ module.exports = {
   },
 
   async getMonthIncome(req, res, next) {
-    // Get the current date
     const currentDate = new Date();
 
-    // Initialize an array to hold the income for each month
     const incomeByMonth = [];
 
-    // Loop through the last 12 months
     for (let i = 0; i < 12; i++) {
-      // Calculate the start and end date of the current month
       const startDate = new Date(
         currentDate.getFullYear(),
         currentDate.getMonth() - i,
@@ -260,15 +313,18 @@ module.exports = {
 
       const courseCountsArray = Object.entries(courseCounts);
       courseCountsArray.sort((a, b) => b[1] - a[1]);
-      const top10Courses = courseCountsArray.slice(0, 10);
       const coursesInfo = [];
 
-      for (const [courseId, income] of top10Courses) {
+      for (const [courseId, income] of courseCountsArray) {
         const course = await CourseModel.findById(courseId); // Tìm kiếm khóa học để lấy tên
         const nameCourse = course.nameCourse;
-        coursesInfo.push({ _id: courseId, nameCourse: nameCourse, income: income });
+        coursesInfo.push({
+          _id: courseId,
+          nameCourse: nameCourse,
+          income: income,
+        });
       }
-  
+
       res.json(coursesInfo);
     } catch (error) {
       next(error);

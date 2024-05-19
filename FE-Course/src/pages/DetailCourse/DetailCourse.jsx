@@ -206,7 +206,7 @@ function DetailCourse() {
             </Link>
           )}
 
-          {(token && role === 2) &&haveRate && (
+          {token && role === 2 && haveRate && (
             <MdRateReview
               onClick={onShowRate}
               className="cursor-pointer"
@@ -216,7 +216,7 @@ function DetailCourse() {
         </div>
 
         <p className="my-4 text-center text-2xl font-bold">Mô tả khóa học</p>
-        <p>{data.description}</p>
+        <div dangerouslySetInnerHTML={{ __html: data.description }} />
       </div>
 
       <p className="my-4 text-center text-2xl font-bold">Bài giảng</p>

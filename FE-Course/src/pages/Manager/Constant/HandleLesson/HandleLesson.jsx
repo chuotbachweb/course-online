@@ -13,6 +13,7 @@ function HandleLesson() {
   const [data, setData] = useState({
     nameLesson: "",
     videoUrl: "",
+    fileHomework: "",
   });
 
   const onChange = (e) => {
@@ -21,9 +22,8 @@ function HandleLesson() {
     setData(newData);
   };
 
-  const onChangeVideo = (e) => {
+  const onChangeFile = (e) => {
     const file = e.target.files[0];
-
     if (file && file.type.startsWith("video/")) {
       const newData = { ...data };
       newData.videoUrl = file;
@@ -31,6 +31,10 @@ function HandleLesson() {
 
       const url = URL.createObjectURL(file);
       setVideoUrl(url);
+    } else if (file && file.type.startsWith("application/")) {
+      const newData = { ...data };
+      newData.fileHomework = file;
+      setData(newData);
     }
   };
 
@@ -40,6 +44,7 @@ function HandleLesson() {
     const formData = new FormData();
     formData.append("nameLesson", data.nameLesson);
     formData.append("videoUrl", data.videoUrl);
+    formData.append("fileHomework", data.fileHomework);
     if (status === "Add") {
       LessonService.addLesson({ courseId, data: formData })
         .then((data) => {
@@ -50,29 +55,31 @@ function HandleLesson() {
           console.log(err);
           setLoading(false);
         });
-    }else{
-      LessonService.editLesson({courseId, data: formData}).then((data) => {
-        alert("Sửa thành công");
-        navigate(-1);
-      })
-      .catch((err) => {
-        console.log(err);
-        setLoading(false);
-      });
+    } else {
+      LessonService.editLesson({ courseId, data: formData })
+        .then((data) => {
+          alert("Sửa thành công");
+          navigate(-1);
+        })
+        .catch((err) => {
+          console.log(err);
+          setLoading(false);
+        });
     }
   };
 
   useEffect(() => {
     if (status === "Edit") {
       LessonService.getLessonById({ id: courseId })
-       .then((lesson) => {
+        .then((lesson) => {
           setData({
             nameLesson: lesson.data.nameLesson,
             videoUrl: lesson.data.videoUrl,
+            fileHomework: lesson.data.fileHomework,
           });
-          setVideoUrl(lesson.data.videoUrl)
+          setVideoUrl(lesson.data.videoUrl);
         })
-       .catch((err) => {
+        .catch((err) => {
           console.log(err);
         });
     }
@@ -112,8 +119,26 @@ function HandleLesson() {
           name="videoUrl"
           type="file"
           accept="video/*"
-          required={status === 'Add' ? true :false}
-          onChange={onChangeVideo}
+          required={status === "Add" ? true : false}
+          onChange={onChangeFile}
+        />
+      </div>
+
+      <div className="flex flex-col mb-4 relative">
+        <label
+          className="mb-2 text-sm font-medium text-gray-900 border rounded-lg p-4"
+          htmlFor="fileHomework"
+        >
+          {data.fileHomework ?"Thay đổi file bài tập":"Tải file bài tập (pdf)"}
+        </label>
+        <input
+          className="opacity-0 absolute top-6"
+          id="fileHomework"
+          name="fileHomework"
+          type="file"
+          accept=".pdf"
+          required={status === "Add" ? true : false}
+          onChange={onChangeFile}
         />
       </div>
 

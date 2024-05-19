@@ -29,7 +29,7 @@ module.exports = {
     const { page, per_page } = req.query;
     MyCourseModel.find({ studentId: req.user.id })
       .sort({ _id: -1 })
-      .populate(["courseId", "studentId", , "teacherId"])
+      .populate(["courseId", "studentId", "teacherId"])
       .then((data) => {
         const currentPage = parseInt(page) || 1;
         const itemsPerPage = parseInt(per_page) || data.length;
@@ -85,12 +85,22 @@ module.exports = {
           { new: true }
         );
 
-        res.json({ data: updateProgress});
+        res.json({ data: updateProgress });
       } else {
         res.json({ message: "Bài giảng đã học" });
       }
     } catch (error) {
       return res.status(500).json(error);
     }
+  },
+
+  deleteMyCourse(req, res, next) {
+    MyCourseModel.findByIdAndDelete(req.params.id)
+      .then((data) => {
+        res.status(200).json({ data });
+      })
+      .catch((error) => {
+        res.status(500).json({ error: error });
+      });
   },
 };

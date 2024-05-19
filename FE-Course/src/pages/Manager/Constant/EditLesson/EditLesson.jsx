@@ -1,13 +1,15 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 import ListLesson from "~/components/ListLesson";
 import Modal from "~/components/Modal";
 import routes from "~/config/routes";
 import * as LessonService from "~/services/lessonService";
+import { AuthContext } from "~/shared/AuthProvider";
 
 function EditLesson() {
   const { id } = useParams();
+  const { role } = useContext(AuthContext);
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -50,16 +52,19 @@ function EditLesson() {
         showModal={showModal}
         onClose={onClose}
       />
-
       <div className="flex flex-col md:flex-row">
-        <button
-          className="w-full md:mr-2 bg-primary text-center text-white py-4 rounded"
-          onClick={() =>
-            navigate(routes.handleLesson, { state: { status: "Add" ,courseId: id} })
-          }
-        >
-          Thêm bài học
-        </button>
+        {role === 0 || role === 1 && (
+          <button
+            className="w-full md:mr-2 bg-primary text-center text-white py-4 rounded"
+            onClick={() =>
+              navigate(routes.handleLesson, {
+                state: { status: "Add", courseId: id },
+              })
+            }
+          >
+            Thêm bài học
+          </button>
+        )}
         <button
           onClick={() => navigate(-1)}
           className="w-full mt-4 md:mt-0 bg-red-500 text-center text-white py-4 rounded"

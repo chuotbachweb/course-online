@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import routes from "~/config/routes";
 import * as courseService from "~/services/courseService";
+import { AuthContext } from "~/shared/AuthProvider";
 
 function TableUser({ data, onOpen }) {
   const location = useLocation();
+  const { role } = useContext(AuthContext);
   const [totalCourse, setTotalCourse] = useState(0);
 
   useEffect(() => {
@@ -38,8 +40,8 @@ function TableUser({ data, onOpen }) {
             {location.pathname === routes.teacherAdmin && (
               <th className="px-6 py-3">Số khóa</th>
             )}
-            <th></th>
-            <th></th>
+            {role !== 3 && <th></th>}
+            {role !== 3 && <th></th>}
           </tr>
         </thead>
         <tbody>
@@ -65,29 +67,48 @@ function TableUser({ data, onOpen }) {
                   {new Date(item.createdAt).toLocaleDateString("vi-VN")}
                 </td>
                 {location.pathname === routes.teacherAdmin && (
-                  <td className="px-6 py-4">{totalCourse[index]?.data.length}</td>
+                  <td className="px-6 py-4">
+                    {totalCourse[index]?.data.length}
+                  </td>
                 )}
-                <td className="px-6 py-4 text-right">
-                  <Link
-                    to={`/manager/admin/user/edit/${item._id}`}
-                    className="font-medium p-4 text-blue-600 dark:text-blue-500 hover:underline"
-                  >
-                    Sửa
-                  </Link>
-                </td>
-                <td>
-                  <button
-                    onClick={() => onOpen(item._id)}
-                    className="font-medium p-4 text-red-600 dark:text-red-500 hover:underline"
-                  >
-                    Xóa
-                  </button>
-                </td>
+                {role !== 3 && (
+                  <td className="px-6 py-4 text-right">
+                    <Link
+                      to={`/manager/admin/user/edit/${item._id}`}
+                      className="font-medium p-4 text-blue-600 dark:text-blue-500 hover:underline"
+                    >
+                      Sửa
+                    </Link>
+                  </td>
+                )}
+                {role !== 3 && (
+                  <td>
+                    <button
+                      onClick={() => {
+                        if (
+                          location.pathname === routes.teacherAdmin &&
+                          totalCourse[index]?.data.length === 0
+                        ) {
+                          onOpen(item._id);
+                        } else {
+                          if (location.pathname === routes.studentAdmin) {
+                            onOpen(item._id);
+                          } else {
+                            alert("Không thể xóa giảng viên này");
+                          }
+                        }
+                      }}
+                      className="font-medium p-4 text-red-600 dark:text-red-500 hover:underline"
+                    >
+                      Xóa
+                    </button>
+                  </td>
+                )}
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan={5} className="text-center py-4">
+              <td colSpan={7} className="text-center py-4">
                 There is no data
               </td>
             </tr>

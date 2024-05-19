@@ -10,6 +10,22 @@ export const getLessonByCourse = ({ courseId }) => {
   }
 };
 
+export const getAllLesson = ({ page, perPage, nameLesson, teacherId }) => {
+  try {
+    const res = httpRequest.get(`lessons/get-all`, {
+      params: {
+        page,
+        per_page: perPage,
+        nameLesson,
+        teacherId,
+      },
+    });
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const getLessonById = async ({ id }) => {
   try {
     const res = await httpRequest.get(`lessons/get-lesson/${id}`);
@@ -17,7 +33,7 @@ export const getLessonById = async ({ id }) => {
   } catch (error) {
     console.log(error);
   }
-}
+};
 
 export const addLesson = ({ courseId, data }) => {
   try {
